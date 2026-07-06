@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Nova Categoria</title>
-</head>
-<body>
+@extends('layouts.admin')
+@section('title','Nova Categorias')
+@section('content')
 
 <h1>Nova Categoria</h1>
 
@@ -30,6 +27,4 @@
     </button>
 
 </form>
-
-</body>
-</html>
+@endsection
