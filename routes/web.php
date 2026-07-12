@@ -22,5 +22,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('categories', CategoryController::class);
 
     Route::resource('products', ProductController::class);
+    Route::get('/products/{product}/delete',[ProductController::class,'delete'])->name('products.delete');
+    
 
 });
