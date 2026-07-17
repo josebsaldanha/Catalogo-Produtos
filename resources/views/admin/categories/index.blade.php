@@ -1,51 +1,269 @@
-@extends('layouts.admin')
-@section('title','Categorias')
+@extends('admin.layouts.app')
+
+
+@section('title')
+Categorias
+@endsection
+
+
+
+@section('page-title')
+Categorias
+@endsection
+
+
+
+
 @section('content')
 
-    <h1>Categorias</h1>
 
-    <a href="{{ route('categories.create')}}">Nova Categoria</a>
 
-    @if(session('sucess'))
+@if(session('success'))
 
-    <p>{{(session('sucess'))}}</p>
+<div class="alerta alerta-sucesso">
 
-    @endif
+    {{ session('success') }}
 
-    @if($categories->isEmpty())
-        <p>Nenhuma categoria encontrada.</p>
-    @else
+</div>
 
-    <table border = "1" cellpadding="8">
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Descrição</th>
-            <th>Ações</th>
-        </tr>
+@endif
 
-        @foreach($categories as $category)
 
-        <tr>
-            <td>{{ $category->id }}</td>
-            <td>{{ $category->nome }}</td>
-            <td>{{ $category->descricao }}</td>
-            <td>
-                <a href="{{route('categories.edit', $category)}}">Editar</a>
-                <form action="{{route('categories.destroy', $category)}}" method="POST" style="display:inline;">
 
-                    @csrf
-                    @method('DELETE')
 
-                    <button type="submit" onclick="return confirm('Deseja eliminar esta categoria?')">
-                        Eliminar
-                    </button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
+@if(session('error'))
 
-    </table>
-    @endif
-    @endsection
-       
+<div class="alerta alerta-erro">
+
+    {{ session('error') }}
+
+</div>
+
+@endif
+
+
+
+
+
+
+
+<div class="pagina-cabecalho">
+
+
+<div>
+
+
+<p class="pagina-titulo">
+
+Lista de Categorias
+
+</p>
+
+
+<p class="pagina-subtitulo">
+
+Gerir categorias dos produtos do catálogo.
+
+</p>
+
+
+</div>
+
+
+
+
+
+<a href="{{ route('categories.create') }}"
+class="btn btn-primario">
+
++ Nova Categoria
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="cartao-tabela">
+
+
+
+<div class="cartao-tabela-cabecalho">
+
+
+<span class="cartao-tabela-titulo">
+
+{{ $categories->total() }}
+
+categorias encontradas
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="tabela-wrapper">
+
+
+
+<table class="tabela-admin">
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+Nome
+</th>
+
+
+<th>
+Descrição
+</th>
+
+
+<th>
+Produtos
+</th>
+
+
+<th>
+Criada em
+</th>
+
+
+<th>
+Ações
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+
+
+<tbody>
+
+
+
+@forelse($categories as $category)
+
+
+
+<tr>
+
+
+<td>
+
+<strong>
+
+{{ $category->nome }}
+
+</strong>
+
+</td>
+
+
+
+
+
+
+<td>
+
+{{ $category->descricao ?? 'Sem descrição' }}
+
+</td>
+
+
+
+
+
+
+<td>
+
+
+<span class="etiqueta etiqueta-disponivel">
+
+{{ $category->products_count }}
+
+Produtos
+
+</span>
+
+
+</td>
+
+
+
+
+
+
+<td>
+
+{{ $category->created_at->format('d/m/Y') }}
+
+</td>
+
+
+
+
+
+
+
+
+<td>
+
+
+<div class="acoes">
+
+
+
+<a href="{{ route('categories.edit',$category) }}"class="btn btn-secundario btn-pequeno">
+Editar
+</a>
+
+<a href="{{ route('categories.delete',$category) }}"class="btn btn-perigo btn-pequeno">
+Apagar
+</a>
+</div>
+</td>
+</tr>
+@empty
+<tr>
+<td colspan="5">
+Nenhuma categoria encontrada.
+</td>
+</tr>
+@endforelse
+</tbody>
+</table>
+</div>
+</div>
+<div style="margin-top:20px">
+
+{{ $categories->links() }}
+
+</div>
+@endsection

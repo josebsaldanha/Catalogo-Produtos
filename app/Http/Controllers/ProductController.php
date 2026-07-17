@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
-
-
     /*** Lista produtos*/
     public function index(Request $request)
     {
@@ -34,25 +32,18 @@ class ProductController extends Controller
 
             $query->where('estado',$request->estado);
         }
-        $products = $query
-                    ->latest()
-                    ->paginate(10)
-                    ->withQueryString();
-        $categories = Category::all();
+        $products = $query->latest()->paginate(10)->withQueryString();
+
+        $categories = Category::orderBy('nome')->get();
 
         return view( 'admin.products.index',compact('products','categories'));
     }
-    /**
-     * Formulário criar produto
-     */
+
+    /*** Formulário criar produto*/
 
     public function create()
     {
-
-
         $categories = Category::all();
-
-
 
         return view(
             'admin.products.create',
@@ -137,39 +128,14 @@ class ProductController extends Controller
 
 
     }
-
-
-
-
-
-
-
-
-
-
     /**
      * Mostrar produto
      */
 
     public function show(Product $product)
     {
-
-
-        return view(
-            'admin.produtos.show',
-            compact('product')
-        );
-
+        return view( 'admin.products.show', compact('product'));
     }
-
-
-
-
-
-
-
-
-
     /**
      * Editar
      */
@@ -192,15 +158,6 @@ class ProductController extends Controller
 
 
     }
-
-
-
-
-
-
-
-
-
     /*** Atualizar produto*/
 
     public function update(
@@ -209,45 +166,21 @@ class ProductController extends Controller
     )
     {
         $validated = $request->validate([
-
-
             'category_id'
             =>'required|exists:categories,id',
-
-
             'nome'
             =>'required|max:255',
-
-
             'descricao'
             =>'nullable',
-
-
             'preco'
             =>'required|numeric|min:0',
-
-
             'preco_antigo'
             =>'nullable|numeric|min:0',
-
-
             'estado'
             =>'required|in:disponivel,esgotado,promocao',
-
-
             'imagem'
-            =>'nullable|image|mimes:jpg,jpeg,png|max:2048'
-
-
-        ]);
-
-
-
-
-
-
-
-
+            =>'nullable|image|mimes:jpg,jpeg,png|max:2048']);
+            
         // substituir imagem
 
         if($request->hasFile('imagem')){
@@ -312,52 +245,21 @@ class ProductController extends Controller
 
 
     }
-
-
-
-
-
-
-
-
-
-    /**
-     * Apagar produto
-     */
-
+    /**    * Apagar produto */
     public function destroy(Product $product)
     {
-
+        dd(public_path('uploads/produtos/'.$product->imagem));
 
         if($product->imagem &&
         File::exists(
-        public_path('uploads/produto/'.$product->imagem)
+        public_path('uploads/produtos/'.$product->imagem)
         )){
-
-
             File::delete(
-            public_path('uploads/produto/'.$product->imagem)
+            public_path('uploads/produtos/'.$product->imagem)
             );
-
         }
-
-
-
-
         $product->delete();
-
-
-
-
-
-        return redirect()
-        ->route('products.index')
-        ->with(
-            'success',
-            'Produto eliminado com sucesso!'
-        );
-
-
+        return redirect()->route('products.index')->with('success','Produto eliminado com sucesso!');
     }
     public function delete(Product $product)
     {

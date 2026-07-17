@@ -60,7 +60,15 @@ class="menu-item">
 Nova Categoria
 
 </a>
+<p class="menu-seccao">Sistema</p>
 
+<form method="POST" action="{{ route('logout') }}">
+    @csrf
+
+    <button type="submit" class="menu-item">
+        Sair
+    </button>
+</form>
 
 </nav>
 
